@@ -43,16 +43,11 @@ pipeline {
         stage('Prepare Cache Directory') {
             steps {
                 script {
-                    // Create the .cache directory for Jenkins user if it doesn't exist
-                    def jenkinsHome = "/var/lib/jenkins"  // Adjust if your Jenkins home directory is different
-                    def cacheDir = "${jenkinsHome}/.cache/trivy"
-
-                    // Ensure the directory exists and set proper ownership and permissions
-                    sh """
-                        sudo mkdir -p ${cacheDir}
-                        sudo chown -R jenkins:jenkins ${cacheDir}
-                        sudo chmod -R 755 ${cacheDir}
-                    """
+                      def cacheDir = "/var/lib/jenkins/.cache/trivy" // Use the same directory created for Jenkins user
+            // Set the cache directory environment variable for Trivy
+            withEnv(["TRIVY_CACHE_DIR=${cacheDir}"]) {
+                // Attempt to manually update the vulnerability DB
+                sh 'trivy fs --refresh || echo "Failed to download DB"'
                 }
             }
         }
