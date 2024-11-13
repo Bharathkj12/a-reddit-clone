@@ -12,6 +12,7 @@ pipeline {
         DOCKER_PASS = 'dockerhub'
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+        TRIVY_CACHE_DIR = "/home/ubuntu/.cache/trivy" // Set your cache path here
     }
     stages {
         stage('clean workspace') {
@@ -46,8 +47,7 @@ pipeline {
         }
         stage('TRIVY FS SCAN') {
             steps {
-                sh "trivy fs . > trivyfs.txt"
-             }
+                sh "trivy --cache-dir ${env.TRIVY_CACHE_DIR} fs ."             }
          }
 	 
 }
