@@ -51,6 +51,7 @@ pipeline {
                 }
             }
         }
+        }
         stage('Trivy DB Update') {
             steps {
                 script {
@@ -79,5 +80,4 @@ pipeline {
             cleanWs()
         }
     }
-}
 }
