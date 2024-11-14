@@ -43,14 +43,14 @@ pipeline {
         stage('Prepare Cache Directory') {
             steps {
                 script {
-                      def cacheDir = "/var/lib/jenkins/.cache/trivy" // Use the same directory created for Jenkins user
-            // Set the cache directory environment variable for Trivy
-            withEnv(["TRIVY_CACHE_DIR=${cacheDir}"]) {
-                // Attempt to manually update the vulnerability DB
-                sh 'trivy fs --refresh || echo "Failed to download DB"'
+                    def cacheDir = "/var/lib/jenkins/.cache/trivy" // Use the same directory created for Jenkins user
+                    // Set the cache directory environment variable for Trivy
+                    withEnv(["TRIVY_CACHE_DIR=${cacheDir}"]) {
+                        // Attempt to manually update the vulnerability DB
+                        sh 'trivy fs --refresh || echo "Failed to refresh DB"'
+                    }
                 }
             }
-        }
         }
         stage('Trivy DB Update') {
             steps {
@@ -58,8 +58,8 @@ pipeline {
                     def cacheDir = "/var/lib/jenkins/.cache/trivy" // Use the same directory created for Jenkins user
                     // Set the cache directory environment variable for Trivy
                     withEnv(["TRIVY_CACHE_DIR=${cacheDir}"]) {
-                        // Attempt to manually update the vulnerability DB
-                        sh 'trivy --download-db-only || echo "Failed to download DB"'
+                        // Attempt to refresh the vulnerability DB
+                        sh 'trivy fs --refresh || echo "Failed to refresh DB"'
                     }
                 }
             }
